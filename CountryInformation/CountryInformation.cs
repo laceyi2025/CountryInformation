@@ -25,20 +25,27 @@ namespace CountryInformation
        * Purpose: To display country information to the user
        */
 
+      
       string[] listOfCountries = new string[244];
 
-      private void LoadCountriesFromFile(string[] listToLoad)
-      {
-         StreamReader inputFileReader = File.OpenText("CountryInfo.csv");
-         int index = 0;
-         while (!inputFileReader.EndOfStream)
-         {
-            listToLoad[index] = inputFileReader.ReadLine();
 
-            index++;
-         }
-         inputFileReader.Close();
-      }
+      //private void LoadCountriesFromFile(string[] listToLoad)
+      //{
+      //   string dataList = File.ReadAllText("CountryInfo.csv");
+      //   StreamReader fileRead = new StreamReader("CountryInfo.csv");
+      //   string [] inputFileReader = fileRead.ReadToEnd().Split(',');
+
+      //   listToLoad[index] = inputFileReader.GetValue();
+
+      //   int index = 0;
+      //   while (!inputFileReader.EndOfStream())
+      //   {
+      //      listToLoad[index] = inputFileReader.ReadLine();
+            
+      //      index++;
+      //   }
+      //   inputFileReader.Close();
+      //}
 
       private void PrintArrayContents(string[] arrayToPrint)
       {
@@ -50,20 +57,21 @@ namespace CountryInformation
 
       private void CountryInformation_Load(object sender, EventArgs e)
       {
-         LoadCountriesFromFile(listOfCountries);
+         //LoadCountriesFromFile(listOfCountries);
          PrintArrayContents(listOfCountries);
       }
 
-      private void btnSearch_KeyDown(object sender, KeyEventArgs e)
+      private void SearchForCountryInfo()
+      {
+         
+      }
+
+      private void CountryInformation_KeyDown(object sender, KeyEventArgs e)
       {
          if (e.KeyCode == Keys.Enter)
          {
             btnSearch.PerformClick();
          }
-      }
-      private void SearchForCountryInfo()
-      {
-         
       }
    }
 }
