@@ -31,18 +31,22 @@ namespace CountryInformation
       string[] latitude = new string[243];
       string[] longitude = new string[243];
 
-      private void LoadCountriesFromFile()
+      private void LoadCountriesFromFile(ref string[] listToLoad)
       {
          StreamReader inputFileReader = File.OpenText("CountryInfo.csv");
          int index = 0;
          string[] dataList = new string[243];
          while (!inputFileReader.EndOfStream)
          {
-            dataList[index] = inputFileReader.ReadLine().Split(',');
+            //dataList[index] = inputFileReader.ReadLine().Split(',');
+
+           listToLoad[index] = inputFileReader.ReadLine();
+            index++;
          }
+
       }
 
-      private void PrintArrayContents(string[] arrayToPrint)
+      private void PrintArrayContents(ref string[] arrayToPrint)
       {
          foreach (string country in arrayToPrint)
          {
@@ -52,17 +56,39 @@ namespace CountryInformation
 
       private void CountryInformation_Load(object sender, EventArgs e)
       {
-         //LoadCountriesFromFile(listOfCountries);
-         PrintArrayContents(listOfCountries);
+         LoadCountriesFromFile(ref listOfCountries);
+         PrintArrayContents(ref listOfCountries);
       }
 
       private void SearchForCountryInfo()
       {
+         bool countryFound = false; 
 
+         for (int index = lstCountryInfo.Items.Count - 1; index>=0; index --)
+         {
+            if (lstCountryInfo.Items[index].ToString().Contains(txtSearchBar.Text))
+            {
+               lstCountryInfo.SetSelected(index, true);
+               countryFound = true;
+            }
+         }
+
+         if (countryFound)
+         {
+            MessageBox.Show("Is this the correct country?");
+
+         }
+         else
+         {
+            MessageBox.Show("No country found");
+            txtSearchBar.Clear();
+         }
       }
 
       private void txtSearchBar_KeyDown(object sender, KeyEventArgs e)
       {
+         
+         SearchForCountryInfo();
          if (e.KeyCode == Keys.Enter)
          {
             btnSearch.PerformClick();
@@ -71,6 +97,9 @@ namespace CountryInformation
          {
             btnClear.PerformClick();
          }
+         
+
+        
       }
    }
 }
