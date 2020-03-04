@@ -25,27 +25,22 @@ namespace CountryInformation
        * Purpose: To display country information to the user
        */
 
-      
-      string[] listOfCountries = new string[244];
+      //globals
+      string[] listOfCountries = new string[243];
+      string[] countries = new string[243];
+      string[] latitude = new string[243];
+      string[] longitude = new string[243];
 
-
-      //private void LoadCountriesFromFile(string[] listToLoad)
-      //{
-      //   string dataList = File.ReadAllText("CountryInfo.csv");
-      //   StreamReader fileRead = new StreamReader("CountryInfo.csv");
-      //   string [] inputFileReader = fileRead.ReadToEnd().Split(',');
-
-      //   listToLoad[index] = inputFileReader.GetValue();
-
-      //   int index = 0;
-      //   while (!inputFileReader.EndOfStream())
-      //   {
-      //      listToLoad[index] = inputFileReader.ReadLine();
-            
-      //      index++;
-      //   }
-      //   inputFileReader.Close();
-      //}
+      private void LoadCountriesFromFile()
+      {
+         StreamReader inputFileReader = File.OpenText("CountryInfo.csv");
+         int index = 0;
+         string[] dataList = new string[243];
+         while (!inputFileReader.EndOfStream)
+         {
+            dataList[index] = inputFileReader.ReadLine().Split(',');
+         }
+      }
 
       private void PrintArrayContents(string[] arrayToPrint)
       {
@@ -63,14 +58,18 @@ namespace CountryInformation
 
       private void SearchForCountryInfo()
       {
-         
+
       }
 
-      private void CountryInformation_KeyDown(object sender, KeyEventArgs e)
+      private void txtSearchBar_KeyDown(object sender, KeyEventArgs e)
       {
          if (e.KeyCode == Keys.Enter)
          {
             btnSearch.PerformClick();
+         }
+         else if (e.KeyCode == Keys.Delete)
+         {
+            btnClear.PerformClick();
          }
       }
    }
