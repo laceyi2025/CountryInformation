@@ -31,40 +31,50 @@ namespace CountryInformation
       string[] latitude = new string[243];
       string[] longitude = new string[243];
 
-      private void LoadCountriesFromFile(ref string[] listToLoad)
+      /// <summary>
+      /// Open and read the file into the program
+      /// </summary>
+      private void LoadCountriesFromFile()
       {
          StreamReader inputFileReader = File.OpenText("CountryInfo.csv");
          int index = 0;
-         string[] dataList = new string[243];
+         string[] dataList;
+
          while (!inputFileReader.EndOfStream)
          {
-            //dataList[index] = inputFileReader.ReadLine().Split(',');
-
-           listToLoad[index] = inputFileReader.ReadLine();
+            dataList = inputFileReader.ReadLine().Split(',');
+            countries[index] = dataList[0];
+            latitude[index] = dataList[1];
+            longitude[index] = dataList[2];
             index++;
          }
 
+         inputFileReader.Close();
+         inputFileReader.Dispose();
+
       }
 
-      private void PrintArrayContents(ref string[] arrayToPrint)
+      private void PrintArrayContents()
       {
-         foreach (string country in arrayToPrint)
+         foreach (string country in countries)
          {
             lstCountryInfo.Items.Add(country);
+            txtSearchBar.AutoCompleteCustomSource.Add(country);
          }
       }
 
       private void CountryInformation_Load(object sender, EventArgs e)
       {
-         LoadCountriesFromFile(ref listOfCountries);
-         PrintArrayContents(ref listOfCountries);
+         LoadCountriesFromFile();
+         PrintArrayContents();
       }
 
       private void SearchForCountryInfo()
       {
-         bool countryFound = false; 
+         bool countryFound = false;
+         
 
-         for (int index = lstCountryInfo.Items.Count - 1; index>=0; index --)
+         for (int index = lstCountryInfo.Items.Count - 1; index >= 0; index--)
          {
             if (lstCountryInfo.Items[index].ToString().Contains(txtSearchBar.Text))
             {
@@ -76,7 +86,6 @@ namespace CountryInformation
          if (countryFound)
          {
             MessageBox.Show("Is this the correct country?");
-
          }
          else
          {
@@ -87,8 +96,6 @@ namespace CountryInformation
 
       private void txtSearchBar_KeyDown(object sender, KeyEventArgs e)
       {
-         
-         SearchForCountryInfo();
          if (e.KeyCode == Keys.Enter)
          {
             btnSearch.PerformClick();
@@ -97,9 +104,17 @@ namespace CountryInformation
          {
             btnClear.PerformClick();
          }
-         
+      }
 
-        
+      private void btnSearch_Click(object sender, EventArgs e)
+      {
+         SearchForCountryInfo();
+      }
+
+      private void btnClear_Click(object sender, EventArgs e)
+      {
+         txtSearchBar.Clear();
+         txtSearchResults.Clear();
       }
    }
 }
