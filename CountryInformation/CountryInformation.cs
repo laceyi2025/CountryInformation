@@ -54,6 +54,9 @@ namespace CountryInformation
 
       }
 
+      /// <summary>
+      /// Prints array contents to the list box
+      /// </summary>
       private void PrintArrayContents()
       {
          foreach (string country in countries)
@@ -63,37 +66,54 @@ namespace CountryInformation
          }
       }
 
+      /// <summary>
+      /// loads everything to the form upon form load
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void CountryInformation_Load(object sender, EventArgs e)
       {
+         gbxMap.Enabled = false;
          LoadCountriesFromFile();
          PrintArrayContents();
       }
 
+      /// <summary>
+      /// Searches for user input in the country list and displays message box to check if the contry is correct 
+      /// </summary>
       private void SearchForCountryInfo()
       {
          bool countryFound = false;
-         
-
          for (int index = lstCountryInfo.Items.Count - 1; index >= 0; index--)
          {
             if (lstCountryInfo.Items[index].ToString().Contains(txtSearchBar.Text))
             {
                lstCountryInfo.SetSelected(index, true);
-               countryFound = true;
+               DialogResult dialogResult = MessageBox.Show("Is this the correct country?", "Serach Reults", MessageBoxButtons.YesNo);
+
+               if (dialogResult == DialogResult.Yes)
+               {
+                  txtSearchResults.Text = ("Latitude: " + latitude[lstCountryInfo.SelectedIndex] + ", Longitude: " + longitude[lstCountryInfo.SelectedIndex]);
+                  btnSearch.Enabled = false;
+                  countryFound = true;
+                  webBrowserMap.Navigate("http://google.com/maps/search/" + lstCountryInfo.SelectedItem.ToString());
+                  break;
+               }
             }
          }
 
-         if (countryFound)
-         {
-            MessageBox.Show("Is this the correct country?");
-         }
-         else
+         if (!countryFound)
          {
             MessageBox.Show("No country found");
             txtSearchBar.Clear();
          }
       }
 
+      /// <summary>
+      /// allows the user to hit enter to search and backspace to delete without a mouse click
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void txtSearchBar_KeyDown(object sender, KeyEventArgs e)
       {
          if (e.KeyCode == Keys.Enter)
@@ -106,15 +126,55 @@ namespace CountryInformation
          }
       }
 
+      /// <summary>
+      /// performs a search when button is clicked
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void btnSearch_Click(object sender, EventArgs e)
       {
          SearchForCountryInfo();
       }
 
+      /// <summary>
+      /// Clears the text box upon button click
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
       private void btnClear_Click(object sender, EventArgs e)
       {
          txtSearchBar.Clear();
          txtSearchResults.Clear();
+         btnSearch.Enabled = true;
+      }
+
+      /// <summary>
+      /// displays coordinates upon double click of an item in the list box
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void lstCountryInfo_DoubleClick(object sender, EventArgs e)
+      {
+         btnSearch.Enabled = true;
+         if (lstCountryInfo.SelectedIndex != null)
+         {
+            string url = lstCountryInfo.SelectedItem.ToString();
+            webBrowserMap.Navigate("http://google.com/maps/search/" + lstCountryInfo.SelectedItem.ToString());
+            txtSearchResults.Text = ("Latitude: " + latitude[lstCountryInfo.SelectedIndex] + "; Longitude: " + longitude[lstCountryInfo.SelectedIndex]);
+         }
+      }
+
+      /// <summary>
+      /// clears the textboxes upon entering the text field and enables search button 
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void txtSearchBar_Click(object sender, EventArgs e)
+      {
+         txtSearchBar.Text = null;
+         txtSearchResults.Text = null;
+         btnSearch.Enabled = true;
+         webBrowserMap.Navigate("http://google.com/maps/search/");
       }
    }
 }
